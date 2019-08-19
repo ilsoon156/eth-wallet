@@ -230,15 +230,17 @@
             var data = $('#tokenForm').serialize();
             $.post('/api/add_token', data, function (data) {
                 console.log(data)
-                alert('토큰을 추가하였습니다.')
+                if (data == "") alert('토큰중복')
+                else alert('토큰을 추가하였습니다.')
             })
 
-	
+
+
             setTimeout(function (addToken) {
                 location.reload();
             }, 500); // 3000밀리초 = 3초
 
-            
+
         }
 
 

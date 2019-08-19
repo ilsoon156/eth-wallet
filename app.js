@@ -38,7 +38,6 @@ app.use('/login', function(req, res) {
     let globalConfig = config.getConfig();
     globalConfig.privateKey = privateKey;
     globalConfig.address = address;
-
     res.redirect('/');
   }
 });
@@ -161,8 +160,13 @@ app.post('/api/add_token', async function(req, res) {
       dupl = true;
     }
   });
-  if(!dupl) token_list.push(contract_Address)
-  res.render('index');
+  if(!dupl) 
+  {
+    token_list.push(contract_Address)
+    res.render('index');
+  } else{
+    res.send("")
+  }
   
 })
 
