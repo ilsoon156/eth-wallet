@@ -155,8 +155,15 @@ app.get('/api/get_token', async function(req, res) {
 
 app.post('/api/add_token', async function(req, res) {
   var contract_Address = req.param('token_contract');
-  token_list.push(contract_Address)
+  var dupl = false;
+  token_list.forEach(element => {
+    if(element == contract_Address){
+      dupl = true;
+    }
+  });
+  if(!dupl) token_list.push(contract_Address)
   res.render('index');
+  
 })
 
 app.get('/main', async function (req, res) {
