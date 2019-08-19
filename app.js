@@ -12,7 +12,7 @@ const request = require('request');
 const Web3 = require('web3');
 const web3 = new Web3(config.getConfig().httpEndpoint);
 
-let app = express();
+var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -65,15 +65,17 @@ app.post('/api/transfer', async function(req, res) {
   let etherToWei = web3.utils.toWei(amount, 'ether');
 
   let rawTx = {}
-  let nonce = web3.eth.getTransactionCount(fromAddress, 'pending');
+  let nonce = await web3.eth.getTransactionCount(fromAddress, 'pending');
+ // console.log(contractAddress)
+  console.log(nonce);
   if(contractAddress) {
     let tokenContract = new web3.eth.Contract(tokenAbi, contractAddress);
     let inputData = tokenContract.methods.transfer(toAddress, amount).encodeABI();
     rawTx = {
       to: contractAddress,
       value: 0,
-      gasPrice: '30000000000',
-      gas: '210000',      
+      gasPrice: '20000000',
+      gas: '2100000',      
       data: inputData,
       nonce: nonce
     };
@@ -101,6 +103,7 @@ app.post('/api/transfer', async function(req, res) {
       return
     }
     console.log('========== transaction 발생 ===========')
+    console.log(txHash);
   })
   console.log('========== transaction 처리완료 ===========')
   data.result = 'success'
@@ -153,6 +156,14 @@ app.get('/api/get_token', async function(req, res) {
 app.post('/api/add_token', async function(req, res) {
   var contract_Address = req.param('token_contract');
   token_list.push(contract_Address)
+  res.render('index');
+})
+
+app.get('/main', async function (req, res) {
+  fs.readFile('main.html', function(error, data) {
+    res.writeHead(200, { 'Content-Type': 'text/html'});
+    res.end(data);
+  } )
 })
 
 
